@@ -35,19 +35,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody User loginForm) {
-        User user = userRepository.findUserByUsername(loginForm.getUsername())
-                                  .filter(foundUser -> Objects.equals(foundUser.getPassword(), loginForm.getPassword()))
-                                  .orElseThrow(
-                                          () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bad credentials")
-                                  );
+        var user = userRepository.findUserByUsername(loginForm.getUsername())
+                                 .filter(foundUser -> Objects.equals(foundUser.getPassword(), loginForm.getPassword()))
+                                 .orElseThrow(
+                                         () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bad credentials")
+                                 );
 
-        ResponseEntity<AuthResponse> response = restTemplate.postForEntity(
+        var response = restTemplate.postForEntity(
                 generateUrl, AuthRequest.of(user), AuthResponse.class
         );
-
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new ResponseStatusException(response.getStatusCode());
-        }
 
         return Optional.ofNullable(response.getBody())
                        .orElseThrow(() -> new ResponseStatusException(

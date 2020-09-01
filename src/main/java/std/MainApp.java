@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import std.handler.CustomRestTemplateErrorHandler;
 
 @SpringBootApplication
 public class MainApp {
@@ -14,7 +15,8 @@ public class MainApp {
     }
 
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplateBuilder().build();
+    public RestTemplate restTemplate(CustomRestTemplateErrorHandler errorHandler) {
+        return new RestTemplateBuilder().errorHandler(errorHandler)
+                                        .build();
     }
 }
