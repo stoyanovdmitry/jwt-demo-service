@@ -1,0 +1,10 @@
+server:
+  port: 6970
+# custom properties
+auth:
+  server:
+    url: http://localhost:{${auth.server.port}}
+      read: {${auth.server.url}}/read
+      refresh: ${auth.server.url}/refresh
+      generate: ${auth.server.url}/generate
+    port: 6969
