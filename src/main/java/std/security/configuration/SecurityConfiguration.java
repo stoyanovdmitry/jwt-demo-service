@@ -1,7 +1,6 @@
 package std.security.configuration;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,7 +11,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import javax.servlet.Filter;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final Filter jwtAuthenticationFilter;
@@ -27,11 +25,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .cors().disable()
             .formLogin().disable()
-//            .authorizeRequests()
-//            .antMatchers("/api/users/{username}/**").access("principal == #username")
-//            .antMatchers("/api/users/{username}/**").access("principal == #username")
-//            .antMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
-//            .and()
             .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
             .and()
             .addFilterAfter(jwtAuthenticationFilter, BasicAuthenticationFilter.class)

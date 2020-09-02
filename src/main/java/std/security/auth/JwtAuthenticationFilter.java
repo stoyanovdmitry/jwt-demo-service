@@ -46,6 +46,9 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         return new AndRequestMatcher(
                 new AntPathRequestMatcher("/api/users/**"),
                 new NegatedRequestMatcher(
+                        new AntPathRequestMatcher("/api/users", HttpMethod.GET.name())
+                ),
+                new NegatedRequestMatcher(
                         new AntPathRequestMatcher("/api/users", HttpMethod.POST.name())
                 ),
                 new NegatedRequestMatcher(

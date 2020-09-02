@@ -7,6 +7,8 @@ import std.entitty.User;
 import std.repository.UserRepository;
 import std.security.auth.TokenAuthentication;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -17,9 +19,14 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping
+    public List<User> users() {
+        return userRepository.findAll();
+    }
+
     @GetMapping(path = "/hello", headers = HttpHeaders.AUTHORIZATION)
     public String hello() {
-        TokenAuthentication authentication = (TokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        var authentication = (TokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
 
         return String.format(
                 "hello %s\nthere is your roles: %s",
