@@ -1,15 +1,14 @@
 package std.controller;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import std.entitty.User;
 import std.repository.UserRepository;
-
-import java.util.List;
+import std.security.auth.TokenAuthentication;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -18,15 +17,15 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    @GetMapping(path = "/hello", headers = HttpHeaders.AUTHORIZATION)
+    public String hello() {
+        TokenAuthentication authentication = (TokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
 
-    @GetMapping("/{username}")
-    public User getUser(@PathVariable String username) {
-        return userRepository.findUserByUsername(username)
-                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return String.format(
+                "hello %s\nthere is your roles: %s",
+                authentication.getPrincipal(),
+                authentication.getAuthorities()
+        );
     }
 
     @PostMapping
